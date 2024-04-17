@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/reset.css">
+    <link rel="stylesheet" href="./assets/css/structure.css">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="shortcut icon" href="./assets/img/atelier_logo_tiny.svg" type="image/svg+xml">
+    <title>Atelier Elizeu Manoel - Login</title>
+</head>
+<body style="overflow: hidden;">
+    <span class="r mcenter ccenter w12 h12" id="loading-screen">
+        <img src="./assets/img/loading.gif" style="height: 8rem;" draggable="false">
+    </span>
+    <script src="./assets/js/jquery-3.6.1.min.js"></script>
+    <script src="./assets/js/constants.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <script>
+        getColors();
+        async function getColors() {
+            addLoading();
+            await $.get(apiUrl + "/color")
+            .done(function (data) {
+                let response = $.parseJSON(data);
+                if (response.status == 1) {
+                    let colors = response.result;
+                    for (let i = 0; i < colors.length; i++) {
+                        let color = colors[i];
+                        window.document.body.style.setProperty(color.name, color.value);
+                    }
+                    subLoading();
+                } else if (response.status == -1) {
+                    window.alert(internalErrorMessage);
+                }
+            })
+            .fail(function () {
+                window.alert(unknownErrorMessage);
+            });
+        }
+    </script>
+
+    <main id="login-main-banner" class="c mcenter ccenter w12">
+        <section class="c p4 mcenter ccenter w12 w8-lmd w7-hmd w6-llg w5-hlg ovisible ">
+            <div class="c mcenter ccenter g2 wauto hauto">
+                <a class="i w12 bgLight main-menu-link" style="border-radius: 20px;" href="./#home"><p class="text-center">Criar Novo Registro</p></a>
+                <form action="" class="c p4 mcenter ccenter g4 w12 hauto bgLight" name="frmRegister" id="frmRegister" style="border-radius: 20px;" method="post">
+                    <div class="error" id="error-display"></div>
+                    <div class="r g4 ">
+                        <div class="c g1">
+                            <p>Nível de Usuário</p>
+                            <div class="container-overflow ">   
+                                <h5 class="r mcenter ccenter w12 ">Permissão 1 (Alterar Logo do Menu)</h5>
+                                <label class="r g1 hauto " for="nivel">
+                                    <input type="radio" class="nivel"  name="nivel0" id="nivel0" placeholder="Nível" required value="1">
+                                    <label for="" class="">Sim</label>
+                                    <input type="radio" class="nivel" name="nivel0" id="nivel0" value="0">
+                                    <label for="" class="">Não</label>
+                                </label>
+                                <h5 class="r mcenter ccenter w12 ">Permissão 1 (Alterar Logo do Menu)</h5>
+                                <label class="r g1 hauto " for="nivel">
+                                    <input type="radio" class="nivel"  name="nivel1" id="nivel1" placeholder="Nível" required value="1">
+                                    <label for="" class="">Sim</label>
+                                    <input type="radio" class="nivel" name="nivel1" id="nivel1" value="0">
+                                    <label for="" class="">Não</label>
+                                </label>
+                                <h5 class="r mcenter ccenter w12 ">Permissão 1 (Alterar Logo do Menu)</h5>
+                                <label class="r g1 hauto " for="nivel">
+                                    <input type="radio" class="nivel"  name="nivel2" id="nivel0" placeholder="Nível" required value="1">
+                                    <label for="" class="">Sim</label>
+                                    <input type="radio" class="nivel" name="nivel2" id="nivel0" value="0">
+                                    <label for="" class="">Não</label>
+                                </label>
+                                <h5 class="r mcenter ccenter w12 ">Permissão 1 (Alterar Logo do Menu)</h5>
+                                <label class="r g1 hauto " for="nivel">
+                                    <input type="radio" class="nivel"  name="nivel3" id="nivel0" placeholder="Nível" required value="1">
+                                    <label for="" class="">Sim</label>
+                                    <input type="radio" class="nivel" name="nivel3" id="nivel0" value="0">
+                                    <label for="" class="">Não</label>
+                                </label>
+                                <h5 class="r mcenter ccenter w12 ">Permissão 1 (Alterar Logo do Menu)</h5>
+                                <label class="r g1 hauto " for="nivel">
+                                    <input type="radio" class="nivel"  name="nivel4"  placeholder="Nível" required value="1">
+                                    <label for="" class="">Sim</label>
+                                    <input type="radio" class="nivel" name="nivel4"  value="0">
+                                    <label for="" class="">Não</label>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class=" r mcenter ccenter g1 w12 " for="permission">
+                            <input class=" i" type="hidden" name="permission" id="permission" required readonly>
+                        </label>
+                        <label class=" r mcenter ccenter g1 w12 " for="permission">
+                            <input class=" i" type="hidden" name="userId" id="userId" required readonly>
+                        </label>
+                    </div>
+                    <input class="i submit-button" type="submit" value="Register">
+                </form>
+            </div>
+        </section>
+
+    </main>
+    <script>
+        $("#frmRegister").on("submit", function (event) {
+
+            const idParams =  new URLSearchParams(window.location.search);
+            idValue = idParams.get("id");
+            console.log(idValue);
+            document.getElementById("userId").value = idValue;
+
+            level = document.querySelectorAll(".nivel")
+            data= [];
+            //console.log(level);
+            for (let i = 0; i < level.length; i++) {
+                if (level[i].type == 'radio') {
+                    if (level[i].checked) {
+                        data.push(level[i].value) 
+                    }
+                }    
+            }
+            levelResult = data.join('');
+            document.getElementById('permission').value = levelResult;
+
+            event.preventDefault();
+            $.post(apiUrl + "/user/register-modify", $(this).serialize())
+            .done(function (data) {
+                console.log(data);
+                response = $.parseJSON(data);
+                if (response.status == 1) {
+                     $("#error-display").css("display", "none");
+                     window.location.href = baseUrl + "/#home";
+                } else if (response.status == 0) {
+                     $("#error-display").html(response.message).css("display", "block");
+                } else {
+                     $("#error-display").html(internalErrorMessage).css("display", "block");
+                }
+            })
+             .fail(function () {
+                 $("#error-display").html(unknownErrorMessage).css("display", "block");
+            });
+        });
+        
+    </script>
